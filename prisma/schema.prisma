@@ -1,0 +1,32 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id        String    @id @default(uuid())
+    email     String    @unique
+    name      String?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    projects  Project[] // A user can own multiple projects
+}
+
+model Project {
+    id          String   @id @default(uuid())
+    name        String
+    description String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    owner       User     @relation(fields: [ownerId], references: [id])
+    ownerId     String
+
+    // In the future, you could add:
+    // logs        Log[]
+    // alerts      Alert[]
+    // integrations Integration[]
+}

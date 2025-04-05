@@ -1,0 +1,17 @@
+# node_modules
+# .env
+# dist
+# .next
+# *.log
+# Ignore environment variables
+.env
+apps/api/.env
+apps/web/.env
+
+# Ignore node_modules in all apps
+node_modules
+apps/api/node_modules
+apps/web/node_modules
+
+# Ignore build files
+dist
