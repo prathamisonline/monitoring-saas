@@ -1,5 +1,4 @@
-// test.ts or inside an API route
-import prisma from './lib/db';
+import prisma from './src/lib/db';
 
 async function main() {
   const projects = await prisma.project.findMany();
