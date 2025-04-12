@@ -6,9 +6,10 @@ import { ConfigModule } from '@nestjs/config';
 import { SessionSerializer } from './session.serializer';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
-
+import { PrismaModule } from '../prisma.module';
 @Module({
   imports: [
+    PrismaModule,
     ConfigModule,
     PassportModule.register({ session: true }),
     JwtModule.register({

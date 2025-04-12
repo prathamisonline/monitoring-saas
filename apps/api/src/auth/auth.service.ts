@@ -1,33 +1,35 @@
-// // apps/api/src/auth/auth.service.ts
-// import { Injectable } from '@nestjs/common';
-// import { JwtService } from '@nestjs/jwt';
-
-// @Injectable()
-// export class AuthService {
-//   constructor(private readonly jwtService: JwtService) {}
-
-//   generateJwt(user: any): string {
-//     const payload = {
-//       sub: user.email,
-//       name: `${user.firstName} ${user.lastName}`,
-//       picture: user.picture,
-//     };
-//     return this.jwtService.sign(payload);
-//   }
-// }
+// auth.service.ts
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
+
+  async findOrCreateUser(user: any) {
+    const existing = await this.prisma.user.findUnique({
+      where: { email: user.email },
+    });
+
+    if (existing) return existing;
+
+    return this.prisma.user.create({
+      data: {
+        email: user.email,
+        name: user.name,
+      },
+    });
+  }
 
   generateJwt(user: any) {
     return this.jwtService.sign({
-      sub: user.email,
+      sub: user.id,
       email: user.email,
-      name: `${user.firstName} ${user.lastName}`,
-      picture: user.picture,
+      name: user.name,
     });
   }
 }

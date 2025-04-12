@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -24,20 +18,23 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    const user = req.user;
+    const oauthUser = req.user;
 
-    // 🧠 You must implement generateJwt in AuthService
-    const jwt = this.authService.generateJwt(user);
+    // 🧠 Create or get user from DB
+    const dbUser = await this.authService.findOrCreateUser(oauthUser);
 
-    // 🍪 Set the cookie
+    // 🛡️ Generate JWT using db user
+    const jwt = this.authService.generateJwt(dbUser);
+
+    // 🍪 Set auth token in cookie
     res.cookie('auth_token', jwt, {
-       httpOnly: true, // ← Set this to false for now
-      secure: false, // set true in production
+      httpOnly: true,
+      secure: false,
       sameSite: 'lax',
-       path: '/', 
+      path: '/',
     });
 
-    // ✅ Redirect to frontend
+    // ✅ Redirect to dashboard
     return res.redirect('http://localhost:3000/dashboard');
   }
 
