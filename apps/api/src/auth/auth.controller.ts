@@ -47,7 +47,7 @@ export class AuthController {
   // 4️⃣ Logout
   @Get('logout')
   logout(@Req() req: Request, @Res() res: Response) {
-    req.logout((err) => {
+    req.logout(err => {
       if (err) {
         return res.status(500).json({ message: 'Logout failed' });
       }

@@ -7,6 +7,7 @@ import { SessionSerializer } from './session.serializer';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { PrismaModule } from '../prisma.module';
+import { JwtStrategy } from './strategies/jwt.strategy';
 @Module({
   imports: [
     PrismaModule,
@@ -18,6 +19,6 @@ import { PrismaModule } from '../prisma.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [GoogleStrategy, SessionSerializer, AuthService],
+  providers: [GoogleStrategy, SessionSerializer, AuthService, JwtStrategy],
 })
 export class AuthModule {}
