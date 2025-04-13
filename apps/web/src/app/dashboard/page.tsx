@@ -17,7 +17,7 @@ export default function DashboardPage() {
     <div className="p-8 grid grid-cols-4 gap-2">
       {projects.map((project: Project) => (
       <div key={project.name}>
-        <ProjectCard title={project.name} />
+        <ProjectCard title={project.name} id={project?.id} />
       </div>
       ))}
     </div>

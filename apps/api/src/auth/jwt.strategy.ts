@@ -28,8 +28,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: any) {
-    console.log('Validation payload:', payload);
-
     // Verify user exists in database
     const user = await this.authService.findUserById(payload.sub);
     if (!user) {
