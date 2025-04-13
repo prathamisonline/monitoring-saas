@@ -16,7 +16,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-[family-name:var(--font-geist-sans)]">
           <Providers>{children}</Providers>
-  
       </body>
     </html>
   );

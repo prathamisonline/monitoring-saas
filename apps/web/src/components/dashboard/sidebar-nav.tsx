@@ -1,59 +1,3 @@
-// "use client";
-
-// import Link from "next/link";
-// import { usePathname } from "next/navigation";
-// import { motion } from "framer-motion";
-// import { cn } from "@/lib/utils";
-// import { Home, Folder, Settings, Plus } from "lucide-react";
-// import { Button } from "@/components/ui/button";
-
-// const navItems = [
-// //   { name: "Overview", href: "/dashboard", icon: Home },
-//   { name: "Projects", href: "/dashboard/projects", icon: Folder },
-//   { name: "Settings", href: "/dashboard/settings", icon: Settings },
-// ];
-
-// export function SidebarNav() {
-//   const pathname = usePathname();
-
-//   return (
-//     <nav className="flex justify-between widt-full space-y-2 px-2 py-4">
-//       <div className="flex ">
-//         {navItems.map((item, i) => (
-//           <motion.div
-//             key={item.href}
-//             initial={{ opacity: 0, x: -20 }}
-//             animate={{ opacity: 1, x: 0 }}
-//             transition={{ delay: i * 0.1 }}
-//             className="w-full  "
-//           >
-//             <Link
-//               href={item.href}
-//               className={cn(
-//                 "flex w-full items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent",
-//                 pathname === item.href ? "bg-accent" : "transparent",
-//               )}
-//             >
-//               <item.icon className="mr-2 h-4 w-4" />
-//               {item.name}
-//             </Link>
-//           </motion.div>
-//         ))}
-//       </div>
-//       <motion.div
-//         initial={{ opacity: 0, y: 20 }}
-//         animate={{ opacity: 1, y: 0 }}
-//         transition={{ delay: navItems.length * 0.1 }}
-//         className="mr-2 "
-//       >
-//         <Button className="w-[150px]" variant="outline">
-//           <Plus className="mr-2 h-4 w-4" />
-//           New Project
-//         </Button>
-//       </motion.div>
-//     </nav>
-//   );
-// }
 "use client";
 
 import Link from "next/link";
@@ -74,7 +18,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useCreateProject } from "@/hooks/useProjects";
 
 const navItems = [
 //   { name: "Overview", href: "/dashboard", icon: Home },
@@ -85,13 +30,28 @@ const navItems = [
 export function SidebarNav() {
   const pathname = usePathname();
   const [projectName, setProjectName] = useState("");
+  const drawerCloseRef=useRef(null);
+  const { mutate: createProject, isPending } = useCreateProject();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle project creation logic here
     console.log("Creating project:", projectName);
-    // Reset form
-    setProjectName("");
+   
+    if (!projectName.trim()) return;
+
+    createProject(
+      { name: projectName },
+      {
+        onSuccess: () => {
+          setProjectName("");
+          drawerCloseRef?.current?.click();
+          console.log("✅ Project created");
+        },
+        onError: (err) => {
+          console.error("❌ Error creating project:", err);
+        },
+      },
+    );
   };
 
   return (
@@ -159,9 +119,13 @@ export function SidebarNav() {
               </div>
 
               <DrawerFooter className="px-0">
-                <Button type="submit">Create Project</Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? "Creating..." : "Create Project"}
+                </Button>
                 <DrawerClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button ref={drawerCloseRef} variant="outline">
+                    Cancel
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </form>
