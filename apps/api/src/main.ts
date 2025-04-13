@@ -16,7 +16,15 @@ async function bootstrap() {
   // );
   // 🔐 Middleware to parse cookies (needed for JWT from cookie)
   app.use(cookieParser());
-
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true, // ✅ This lets frontend send cookies
+  });
+// app.use((req, res, next) => {
+//   console.log('🛬 Incoming request:', req.method, req.url);
+//   console.log('🍪 Cookies:', req.cookies);
+//   next();
+// });
   app.use(passport.initialize());
   // app.use(passport.session());
 

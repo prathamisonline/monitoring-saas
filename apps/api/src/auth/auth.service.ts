@@ -24,12 +24,20 @@ export class AuthService {
       },
     });
   }
+   async findUserById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+    });
+  }
 
   generateJwt(user: any) {
-    return this.jwtService.sign({
+    const payload = {
       sub: user.id,
       email: user.email,
       name: user.name,
-    });
+    };
+    console.log('Generating JWT with payload:', payload);
+    return this.jwtService.sign(payload);
   }
+
 }

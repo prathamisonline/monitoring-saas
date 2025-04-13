@@ -43,6 +43,11 @@ export class AuthController {
   getStatus(@Req() req: Request) {
     return req.user ?? { loggedIn: false };
   }
+  @Get('protected')
+  @UseGuards(AuthGuard('jwt'))
+  getProtectedData(@Req() req: Request) {
+    return { user: req.user, message: 'This is protected data' };
+  }
 
   // 4️⃣ Logout
   @Get('logout')
