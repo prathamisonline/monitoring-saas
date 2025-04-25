@@ -1,0 +1,39 @@
+{
+  "name": "sdk", // No scope here
+  "version": "0.1.1",
+  "description": "A lightweight logging SDK for frontend apps to send logs to your DevOps monitoring platform.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsup src/index.ts --watch",
+    "build": "tsup src/index.ts --dts --format esm,cjs",
+    "version:bump": "npm version patch && git add . && git commit -m 'bump: version' && git push && npm publish --access public"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "monitoring",
+    "sdk",
+    "logs",
+    "frontend",
+    "observability"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

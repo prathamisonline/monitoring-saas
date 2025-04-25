@@ -153,3 +153,63 @@ You’ll learn:
 You’ll learn:
 - Client-side form state
 ```
+
+
+24-04-27 -->
+
+Nice — you’ve implemented **add** and **delete** project APIs and frontend flows, which is a great milestone!
+
+### Let’s talk about the **next logical feature** for your DevOps Monitoring SaaS:
+
+---
+
+### ✅ Current Features Done:
+- Google OAuth login with JWT & cookies
+- Authenticated project creation and deletion
+- Project listing (assumed via `GET /project`)
+
+---
+
+### 🧩 Next Feature: **Add SDK Integration Setup for Each Project**
+
+Your users should be able to integrate your SDK into their app, similar to how Sentry or Vercel give you a snippet or API key to send logs/errors.
+
+#### Step-by-step:
+
+1. **Generate Project API Key**
+   - Generate a unique key per project (e.g., UUID or JWT-style)
+   - Save it in the DB as `project.apiKey`
+   - You can show this on the frontend project detail page
+   - Endpoint: `GET /project/:id/key` (protected)
+   - Optional: `POST /project/:id/rotate-key` (to regenerate key)
+
+2. **Create SDK Client (start simple)**
+   - A simple `fetch()` based client in JavaScript/TypeScript
+   - It can send errors or logs to your backend like:
+     ```ts
+     sdk.captureError("Something went wrong")
+     sdk.log("User clicked checkout")
+     ```
+
+3. **Create a New Route: `/events`**
+   - Accept POST requests from your SDK
+   - Store the event (in `events` table: `id`, `projectId`, `type`, `message`, `timestamp`, etc.)
+   - Authenticate using the `apiKey` in headers
+
+4. **Create Dashboard UI**
+   - Show a project detail page
+   - List recent logs/events with filters
+
+---
+
+### After That:
+- Add filters and pagination to event logs
+- Add log levels (info, warning, error)
+- Add charts or metrics (later)
+
+---
+
+### Bonus:
+Want me to write the **DB schema + endpoints** for the event logging feature next?
+
+Let’s keep the momentum going — this is getting real!

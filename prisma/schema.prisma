@@ -1,32 +1,38 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id        String    @id @default(uuid())
-    email     String    @unique
-    name      String?
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    projects  Project[] // A user can own multiple projects
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  projects  Project[]
 }
 
 model Project {
-    id          String   @id @default(uuid())
-    name        String
-    description String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    owner       User     @relation(fields: [ownerId], references: [id])
-    ownerId     String
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ownerId     String
+  logs        Log[]    @relation("ProjectLogs")
+  owner       User     @relation(fields: [ownerId], references: [id])
+}
 
-    // In the future, you could add:
-    // logs        Log[]
-    // alerts      Alert[]
-    // integrations Integration[]
+model Log {
+  id        String   @id @default(cuid())
+  projectId String
+  level     String
+  message   String
+  metadata  Json?
+  timestamp DateTime @default(now())
+  project   Project  @relation("ProjectLogs", fields: [projectId], references: [id])
 }
