@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma.service'; // ✅ Import PrismaService
 import { ProjectModule } from './project/project.module';
-import { LogsModule } from './logs/logs.module';
+import { LogService } from './log/log.service';
+import { LogModule } from './log/log.module';
 
 @Module({
   imports: [
@@ -13,9 +14,9 @@ import { LogsModule } from './logs/logs.module';
     }),
     AuthModule,
     ProjectModule,
-    LogsModule,
+    LogModule,
   ],
-  providers: [PrismaService], // ✅ Register PrismaService
+  providers: [LogService, PrismaService], // ✅ Register PrismaService
   exports: [PrismaService], // ✅ Optional, export if used in other modules
 })
 export class AppModule {}
